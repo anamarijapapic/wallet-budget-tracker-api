@@ -10,14 +10,14 @@ app.use(async (ctx, next) => {
   try {
     await next();
   } catch (err) {
-    console.error(err);
+    ctx.status = err.statusCode || err.status || 500;
     ctx.body = {
-      err,
       message: err.message,
     };
   }
 });
 
 app.use(require('./route/index').routes());
+app.use(require('./route/user').routes());
 
 module.exports = app;
