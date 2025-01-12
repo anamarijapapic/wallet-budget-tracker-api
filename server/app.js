@@ -1,6 +1,8 @@
 require('dotenv-safe').config();
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
+const swagger = require('swagger-generator-koa');
+const options = require('./config/swagger');
 
 const app = new Koa();
 
@@ -19,5 +21,11 @@ app.use(async (ctx, next) => {
 
 app.use(require('./route/index').routes());
 app.use(require('./route/user').routes());
+app.use(require('./route/fund').routes());
+
+swagger.serveSwagger(app, '/swagger', options, {
+  routePath: './route',
+  requestModelPath: './requestModel',
+});
 
 module.exports = app;

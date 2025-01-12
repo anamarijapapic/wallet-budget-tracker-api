@@ -9,7 +9,7 @@ async function getAuthToken() {
   const response = await global.api
     .post('/login')
     .send({
-      email: 'user01@mail.com',
+      email: 'pivancevic@mail.com',
       password: 'sifra123',
     })
     .expect(200);

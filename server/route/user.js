@@ -3,11 +3,13 @@ const Joi = require('joi');
 const CustomError = require('../customError');
 const validationMiddleware = require('../middleware/validate');
 const userRepo = require('../repo/user');
+const { validation } = require('swagger-generator-koa');
+var requestModel = require('../requestModel/user');
 
 const router = new Router();
 
 // GET /users
-router.get('/users', async (ctx) => {
+router.get('/users', validation(requestModel[0]), async (ctx) => {
   ctx.body = await userRepo.get();
 });
 
@@ -17,6 +19,7 @@ router.get(
   validationMiddleware.params({
     userId: Joi.number().integer().required(),
   }),
+  validation(requestModel[1]),
   async (ctx) => {
     const userId = ctx.params.userId;
     ctx.body = await userRepo.getById(userId);
@@ -30,6 +33,7 @@ router.post(
     email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
+  validation(requestModel[2]),
   async (ctx) => {
     const body = ctx.request.body;
     ctx.body = await userRepo.create(body);
@@ -43,6 +47,7 @@ router.post(
     email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
+  validation(requestModel[3]),
   async (ctx) => {
     const { email, password } = ctx.request.body;
     const user = await userRepo.getByEmail(email);

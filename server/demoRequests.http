@@ -45,3 +45,53 @@ Content-Type: {{contentType}}
     "email": "{{email}}",
     "password": "{{password}}"
 }
+
+###
+
+# @name getFunds
+GET http://{{host}}/funds HTTP/1.1
+Authorization: Bearer {{authToken}}
+
+###
+# @prompt fundId Id of the fund to get
+
+# @name getFund
+GET http://{{host}}/funds/{{fundId}} HTTP/1.1
+Authorization: Bearer {{authToken}}
+
+###
+# @prompt name Name of the fund
+# @prompt balance Balance of the fund
+
+# @name createFund
+POST http://{{host}}/funds HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "{{name}}",
+    "balance": "{{balance}}"
+}
+
+###
+# @prompt fundId Id of the fund
+# @prompt name Name of the fund
+# @prompt balance Balance of the fund
+
+# @name updateFund
+PUT http://{{host}}/funds/{{fundId}} HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "{{name}}",
+    "balance": "{{balance}}"
+}
+
+
+###
+# @prompt fundId Id of the fund
+
+# @name deleteFund
+DELETE http://{{host}}/funds/{{fundId}} HTTP/1.1
+Authorization: Bearer {{authToken}}
