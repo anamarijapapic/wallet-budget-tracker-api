@@ -1,29 +1,28 @@
 const Joi = require('@hapi/joi');
+const cc = require('currency-codes');
 
 module.exports = {
   0: {
-    query: {},
-    path: {},
-    header: {},
     group: 'fund',
     description: 'Get All Funds',
   },
   1: {
-    query: {},
     path: {
       fundId: Joi.number().required(),
     },
-    header: {},
     model: 'getFundDetails',
     group: 'fund',
-    description: 'Get fund details',
+    description: 'Get Fund Details',
   },
   2: {
     body: {
       name: Joi.string().required(),
-      balance: Joi.number().precision(2).default(0.0).required(),
+      currency: Joi.string()
+        .valid(...cc.codes())
+        .required(),
+      balance: Joi.number().precision(2).default(0).required(),
     },
-    model: 'create',
+    model: 'createFund',
     group: 'fund',
     description: 'Create Fund',
   },
@@ -33,9 +32,12 @@ module.exports = {
     },
     body: {
       name: Joi.string().required(),
-      balance: Joi.number().precision(2).default(0.0).required(),
+      currency: Joi.string()
+        .valid(...cc.codes())
+        .required(),
+      balance: Joi.number().precision(2).default(0).required(),
     },
-    model: 'update',
+    model: 'updateFund',
     group: 'fund',
     description: 'Update Fund',
   },
@@ -43,7 +45,6 @@ module.exports = {
     path: {
       fundId: Joi.number().integer().required(),
     },
-    model: 'delete',
     group: 'fund',
     description: 'Delete Fund',
   },

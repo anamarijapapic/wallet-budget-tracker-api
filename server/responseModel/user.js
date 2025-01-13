@@ -1,84 +1,52 @@
-// // The name of each response payload should be model name defined in Request model schema.
+const userSchema = {
+  id: {
+    type: 'number',
+  },
+  email: {
+    type: 'string',
+  },
+  password: {
+    type: 'string',
+  },
+  created_at: {
+    type: 'string',
+    format: 'date-time',
+  },
+  updated_at: {
+    type: 'string',
+    format: 'date-time',
+  },
+};
 
-// module.exports = {
-//   getUsers: {
-//     200: [
-//       {
-//         id: {
-//           type: 'number',
-//         },
-//         email: {
-//           type: 'string',
-//         },
-//         password: {
-//           type: 'string',
-//         },
-//         created_at: {
-//           type: 'number',
-//           format: 'date-time',
-//         },
-//       },
-//     ],
-//     500: {
-//       internal: {
-//         type: 'string',
-//       },
-//     },
-//   },
-//   getUserDetails: {
-//     200: {
-//       id: {
-//         type: 'number',
-//       },
-//       email: {
-//         type: 'string',
-//       },
-//       password: {
-//         type: 'string',
-//       },
-//       created_at: {
-//         type: 'number',
-//         format: 'date-time',
-//       },
-//     },
-//     500: {
-//       internal: {
-//         type: 'string',
-//       },
-//     },
-//   },
-//   signup: {
-//     200: {
-//       id: {
-//         type: 'number',
-//       },
-//       email: {
-//         type: 'string',
-//       },
-//       password: {
-//         type: 'string',
-//       },
-//       created_at: {
-//         type: 'number',
-//         format: 'date-time',
-//       },
-//     },
-//     500: {
-//       internal: {
-//         type: 'string',
-//       },
-//     },
-//   },
-//   login: {
-//     200: {
-//       token: {
-//         type: 'string',
-//       },
-//     },
-//     500: {
-//       internal: {
-//         type: 'string',
-//       },
-//     },
-//   },
-// };
+const errorSchema = {
+  error: {
+    type: 'string',
+  },
+};
+
+module.exports = {
+  getUsers: {
+    200: [userSchema],
+    401: errorSchema,
+    500: errorSchema,
+  },
+  getUserDetails: {
+    200: userSchema,
+    401: errorSchema,
+    404: errorSchema,
+    500: errorSchema,
+  },
+  signup: {
+    200: userSchema,
+    500: errorSchema,
+  },
+  login: {
+    200: {
+      token: {
+        type: 'string',
+      },
+    },
+    401: errorSchema,
+    500: errorSchema,
+  },
+};

@@ -1,20 +1,26 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
-const validationMiddleware = require('../middleware/validate');
-const fundRepo = require('../repo/fund');
-const { validation } = require('swagger-generator-koa');
-var requestModel = require('../requestModel/fund');
+const CustomError = require('../customError');
 const authMiddlewareJwtCheck = require('../middleware/auth');
+const validationMiddleware = require('../middleware/validate');
+const { validation } = require('swagger-generator-koa');
+const requestModel = require('../requestModel/fund');
+const fundRepo = require('../repo/fund');
+const cc = require('currency-codes');
 
 const router = new Router();
 
 // GET /funds
 router.get(
   '/funds',
-  validation(requestModel[0]),
   authMiddlewareJwtCheck,
+  validation(requestModel[0]),
   async (ctx) => {
     const userId = ctx.state.user.id;
+    if (!userId) {
+      throw new CustomError(401, 'User not authenticated');
+    }
+
     ctx.body = await fundRepo.get(userId);
   }
 );
@@ -29,7 +35,12 @@ router.get(
   validation(requestModel[1]),
   async (ctx) => {
     const userId = ctx.state.user.id;
+    if (!userId) {
+      throw new CustomError(401, 'User not authenticated');
+    }
+
     const fundId = ctx.params.fundId;
+
     ctx.body = await fundRepo.getById(fundId, userId);
   }
 );
@@ -40,12 +51,20 @@ router.post(
   authMiddlewareJwtCheck,
   validationMiddleware.body({
     name: Joi.string().required(),
-    balance: Joi.number().precision(2).default(0.0).required(),
+    currency: Joi.string()
+      .valid(...cc.codes())
+      .required(),
+    balance: Joi.number().precision(2).default(0).required(),
   }),
   validation(requestModel[2]),
   async (ctx) => {
     const userId = ctx.state.user.id;
+    if (!userId) {
+      throw new CustomError(401, 'User not authenticated');
+    }
+
     const body = ctx.request.body;
+
     ctx.body = await fundRepo.create(userId, body);
   }
 );
@@ -59,7 +78,10 @@ router.put(
   }),
   validationMiddleware.body({
     name: Joi.string().required(),
-    balance: Joi.number().precision(2).default(0.0).required(),
+    currency: Joi.string()
+      .valid(...cc.codes())
+      .required(),
+    balance: Joi.number().precision(2).default(0).required(),
   }),
   validation(requestModel[3]),
   async (ctx) => {

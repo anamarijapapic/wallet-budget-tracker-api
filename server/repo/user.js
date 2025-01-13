@@ -1,3 +1,4 @@
+const CustomError = require('../customError');
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -19,26 +20,58 @@ function generateToken(user) {
 }
 
 async function get() {
-  return db('users').select();
+  try {
+    return await db('users').select();
+  } catch (error) {
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new CustomError(500, `Internal Server Error: ${error.message}`);
+  }
 }
 
 async function getById(userId) {
-  return db('users').where({ id: userId }).first();
+  try {
+    const user = await db('users').where({ id: userId }).first();
+    if (!user) {
+      throw new CustomError(404, `User with id ${userId} does not exist.`);
+    }
+    return user;
+  } catch (error) {
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new CustomError(500, `Internal Server Error: ${error.message}`);
+  }
 }
 
 async function getByEmail(email) {
-  return db('users').where({ email }).first();
+  try {
+    return await db('users').where({ email }).first();
+  } catch (error) {
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new CustomError(500, `Internal Server Error: ${error.message}`);
+  }
 }
 
 async function create(body) {
-  const createdUserId = (
-    await db('users').insert({
-      email: body.email,
-      password: await hashPassword(body.password),
-    })
-  )?.[0];
+  try {
+    const createdUserId = (
+      await db('users').insert({
+        email: body.email,
+        password: await hashPassword(body.password),
+      })
+    )?.[0];
 
-  return getById(createdUserId);
+    return await getById(createdUserId);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new CustomError(500, `Internal Server Error: ${error.message}`);
+  }
 }
 
 module.exports = {

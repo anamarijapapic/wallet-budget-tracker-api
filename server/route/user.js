@@ -1,21 +1,28 @@
 const Router = require('@koa/router');
 const Joi = require('joi');
 const CustomError = require('../customError');
+const authMiddlewareJwtCheck = require('../middleware/auth');
 const validationMiddleware = require('../middleware/validate');
-const userRepo = require('../repo/user');
 const { validation } = require('swagger-generator-koa');
-var requestModel = require('../requestModel/user');
+const requestModel = require('../requestModel/user');
+const userRepo = require('../repo/user');
 
 const router = new Router();
 
 // GET /users
-router.get('/users', validation(requestModel[0]), async (ctx) => {
-  ctx.body = await userRepo.get();
-});
+router.get(
+  '/users',
+  authMiddlewareJwtCheck,
+  validation(requestModel[0]),
+  async (ctx) => {
+    ctx.body = await userRepo.get();
+  }
+);
 
 // GET /users/:userId
 router.get(
   '/users/:userId',
+  authMiddlewareJwtCheck,
   validationMiddleware.params({
     userId: Joi.number().integer().required(),
   }),
@@ -50,8 +57,8 @@ router.post(
   validation(requestModel[3]),
   async (ctx) => {
     const { email, password } = ctx.request.body;
-    const user = await userRepo.getByEmail(email);
 
+    const user = await userRepo.getByEmail(email);
     if (!user) {
       throw new CustomError(401, 'Wrong username or password.');
     }
@@ -60,7 +67,6 @@ router.post(
       password,
       user.password
     );
-
     if (!passwordMatch) {
       throw new CustomError(401, 'Wrong username or password.');
     }

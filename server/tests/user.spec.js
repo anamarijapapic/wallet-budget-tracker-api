@@ -12,9 +12,18 @@ describe('User Routes', () => {
   });
 
   describe('GET /users', () => {
+    it('should require authorization', async () => {
+      await global.api.get('/users').expect(401);
+    });
+
     it('should fetch all users', async () => {
-      const response = await global.api.get('/users').expect(200);
+      const response = await global.api
+        .get('/users')
+        .auth(global.authToken, { type: 'bearer' })
+        .expect(200);
+
       console.log(response.body);
+
       expect(response.body).to.be.an('array');
       expect(response.body.length > 0).to.be.true;
       expect(Object.keys(response.body[0])).to.deep.equal([
@@ -22,14 +31,20 @@ describe('User Routes', () => {
         'email',
         'password',
         'created_at',
+        'updated_at',
       ]);
     });
   });
 
   describe('GET /users/:userId', () => {
+    it('should require authorization', async () => {
+      await global.api.get(`/users/${createdUser.id}`).expect(401);
+    });
+
     it('should fetch the user by id', async () => {
       const response = await global.api
         .get(`/users/${createdUser.id}`)
+        .auth(global.authToken, { type: 'bearer' })
         .expect(200);
 
       expect(response.body).to.deep.equal(createdUser);
