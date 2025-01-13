@@ -1,7 +1,7 @@
 {
-  "name": "primjer",
+  "name": "wallet-budget-tracker-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "[DPR025] Wallet Budget Tracker API",
   "main": "server.js",
   "scripts": {
     "start": "node ./server.js",
@@ -14,12 +14,27 @@
     "test:run": "mocha -r ./apiTest.js **/*.spec.js",
     "test": "run-s db:reset test:run"
   },
-  "keywords": [],
-  "author": "Anamarija Papic + Tea Basic",
+  "keywords": [
+    "wallet",
+    "budget",
+    "tracker",
+    "api"
+  ],
+  "contributors": [
+    {
+      "name": "Tea Bašić"
+    },
+    {
+      "name": "Anamarija Papić"
+    }
+  ],
   "license": "ISC",
   "dependencies": {
     "@koa/router": "^13.1.0",
     "bcrypt": "^5.1.1",
+    "currency-codes": "^2.2.0",
+    "currency-symbol-map": "^5.1.0",
+    "currency.js": "^2.0.4",
     "dotenv-safe": "^9.1.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
