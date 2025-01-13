@@ -120,10 +120,33 @@ async function remove(fundId, userId) {
   }
 }
 
+async function updateBalance(fundId, userId, amount) {
+  try {
+    const fund = await getById(fundId, userId); // Check if fund exists
+
+    await db('funds')
+      .where({ id: fundId })
+      .update({
+        balance: currency(fund.balance, {
+          symbol: getSymbolFromCurrency(fund.currency),
+          precision: cc.code(fund.currency).digits,
+        }).add(amount).value,
+      });
+
+    return getById(fundId, userId);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new CustomError(500, `Internal Server Error: ${error.message}`);
+  }
+}
+
 module.exports = {
   get,
   getById,
   create,
   update,
   remove,
+  updateBalance,
 };

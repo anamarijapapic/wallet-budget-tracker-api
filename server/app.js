@@ -23,6 +23,7 @@ app.use(require('./route/index').routes());
 app.use(require('./route/user').routes());
 app.use(require('./route/fund').routes());
 app.use(require('./route/category').routes());
+app.use(require('./route/transaction').routes());
 
 swagger.serveSwagger(app, '/swagger', options, {
   routePath: './route',
