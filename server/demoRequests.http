@@ -99,3 +99,33 @@ Authorization: Bearer {{authToken}}
 # @name deleteFund
 DELETE http://{{host}}/funds/{{fundId}} HTTP/1.1
 Authorization: Bearer {{authToken}}
+
+###
+
+# @name getCategories
+GET http://{{host}}/categories HTTP/1.1
+
+###
+# @prompt categoryId Id of the category to get
+
+# @name getCategory
+GET http://{{host}}/categories/{{categoryId}} HTTP/1.1
+
+###
+# @prompt name Name of the category
+
+# @name createCategory
+POST http://{{host}}/categories HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "{{name}}"
+}
+
+###
+# @prompt categoryId Id of the category
+
+# @name deleteCategory
+DELETE http://{{host}}/categories/{{categoryId}} HTTP/1.1
+Authorization: Bearer {{authToken}}

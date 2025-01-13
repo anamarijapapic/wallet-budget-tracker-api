@@ -22,10 +22,12 @@ app.use(async (ctx, next) => {
 app.use(require('./route/index').routes());
 app.use(require('./route/user').routes());
 app.use(require('./route/fund').routes());
+app.use(require('./route/category').routes());
 
 swagger.serveSwagger(app, '/swagger', options, {
   routePath: './route',
   requestModelPath: './requestModel',
+  responseModelPath: './responseModel',
 });
 
 module.exports = app;
